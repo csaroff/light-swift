@@ -107,6 +107,14 @@ class SwiftServer
           res.set 'X-Account-Container-Count', accountInfo.containerCount
           res.set 'X-Account-Object-Count', accountInfo.objectCount
 
+          if req.get('x-context').toLowerCase() == 'cdn'
+            host = req.get('host')
+            account = req.account
+            res.set 'X-Cdn-Url', "http://#{host}/v1/AUTH_#{account}"
+            res.set 'X-Cdn-Ssl-Url', "http://#{host}/v1/AUTH_#{account}"
+            res.set 'X-Cdn-Stream-Http-Url', "http://#{host}/v1/AUTH_#{account}"
+            res.set 'X-Cdn-Stream-Flash-Url', "http://#{host}/v1/AUTH_#{account}"
+
           res.timestamp(accountInfo.lastModified)
 
           serverUtils.attachMetadata(accountInfo.metadata, res, 'account')
